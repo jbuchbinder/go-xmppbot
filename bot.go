@@ -58,7 +58,7 @@ func (self *XmppBot) AddCommand(c *XmppBotCommand) {
 
 // Run launches the processing loop for the bot. If this is not called,
 // the bot will connect to the XMPP server, but will not process any input.
-func (self *XmppBot) Run {
+func (self *XmppBot) Run() {
 	w := sync.WaitGroup{}
 	w.Add(1)
 	go func() {
