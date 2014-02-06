@@ -4,8 +4,8 @@ import (
 	"github.com/mattn/go-xmpp"
 )
 
-// Writer type which wraps the ability to push traffic to an xmpp.Client
-// instance.
+// XmppWriter is a Writer type which wraps the ability to push traffic to
+// an xmpp.Client instance.
 type XmppWriter struct {
 	Client *xmpp.Client
 	User   string
