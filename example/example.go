@@ -25,7 +25,8 @@ func main() {
 		Name:     "test",
 		HelpText: "Bot test routine",
 		Command: func(xmppbot *bot.XmppBot, user string, args []string) error {
-			xmppbot.SendClient(user, "This is the result of a test\n")
+			w := xmppbot.GetWriter(user)
+			w.Write([]byte("This is the result of a test\n"))
 			return nil
 		},
 	})
