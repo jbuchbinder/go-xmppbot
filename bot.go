@@ -8,6 +8,7 @@ import (
 	"sync"
 )
 
+// XmppBot initialization parameters.
 type XmppBotParams struct {
 	Server   string
 	Username string
@@ -16,18 +17,22 @@ type XmppBotParams struct {
 	Debug    bool
 }
 
+// Container, instantiated to allow custom actions for the XMPP bot.
 type XmppBotCommand struct {
 	Name     string
 	HelpText string
 	Command  func(xmppbot *XmppBot, user string, args []string) error
 }
 
+// Main object instance for the XMPP chat bot.
 type XmppBot struct {
 	client   *xmpp.Client
 	params   *XmppBotParams
 	commands map[string]*XmppBotCommand
 }
 
+// CreateXmppBot() is the factory method to create a new XMPP chat bot and
+// connect to the upstream XMPP server.
 func CreateXmppBot(parameters *XmppBotParams) (*XmppBot, error) {
 	obj := &XmppBot{params: parameters, commands: make(map[string]*XmppBotCommand)}
 	var err error
@@ -44,10 +49,15 @@ func CreateXmppBot(parameters *XmppBotParams) (*XmppBot, error) {
 	return obj, nil
 }
 
+// AddCommand() adds additional capabilties to the bot. If this is never
+// called, only "version" and "help" commands will be available to end
+// users.
 func (self *XmppBot) AddCommand(c *XmppBotCommand) {
 	self.commands[c.Name] = c
 }
 
+// Run() launches the processing loop for the bot. If this is not called,
+// the bot will connect to the XMPP server, but will not process any input.
 func (self *XmppBot) Run() {
 	w := sync.WaitGroup{}
 	w.Add(1)
@@ -64,7 +74,7 @@ func (self *XmppBot) Run() {
 					log.Print("RECV[" + v.Remote + "]: " + v.Text)
 				}
 				if strings.TrimSpace(v.Text) != "" {
-					self.DealWithCmd(v.Remote, v.Text)
+					self.dealWithCmd(v.Remote, v.Text)
 				}
 			case xmpp.Presence:
 				if self.params.Debug {
@@ -78,12 +88,13 @@ func (self *XmppBot) Run() {
 	w.Wait()
 }
 
-func (self *XmppBot) DealWithCmd(user string, raw string) {
+// Internal routine for processing commands from a user to the bot.
+func (self *XmppBot) dealWithCmd(user string, raw string) {
 	switch strings.TrimSpace(strings.ToLower(raw)) {
 	case "help":
 		// Iterate through commands, plus help and version
 		helptxt := "\n"
-		for k, _ := range self.commands {
+		for k := range self.commands {
 			helptxt += self.commands[k].Name + " : " + self.commands[k].HelpText + "\n"
 		}
 		helptxt += "help : This help text\n" +
@@ -94,7 +105,7 @@ func (self *XmppBot) DealWithCmd(user string, raw string) {
 		self.SendClient(user, "Version: "+VERSION)
 		break
 	default:
-		for k, _ := range self.commands {
+		for k := range self.commands {
 			if strings.HasPrefix(strings.TrimSpace(strings.ToLower(raw)), strings.ToLower(self.commands[k].Name)) {
 				self.commands[k].Command(self, user, strings.Split(strings.TrimPrefix(strings.TrimSpace(strings.ToLower(raw)), strings.ToLower(self.commands[k].Name)), " "))
 				break
@@ -106,6 +117,7 @@ func (self *XmppBot) DealWithCmd(user string, raw string) {
 	return
 }
 
+// Convenience routine to send a response to a specified user.
 func (self *XmppBot) SendClient(user string, msg string) {
 	log.Print("[" + user + "] : " + msg)
 	self.client.Send(xmpp.Chat{Remote: user, Type: "chat", Text: msg})

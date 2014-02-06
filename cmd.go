@@ -8,9 +8,9 @@ import (
 
 // System "run command and report" functions
 
-// Simplistic method of running a local command with arguments. The cmd
-// argument must be a fully qualified path to the destination executable
-// file, otherwise it will not function.
+// RunCmd is a simplistic method of running a local command with arguments.
+// The cmd argument must be a fully qualified path to the destination
+// executable file, otherwise it will not function.
 func (self *XmppBot) RunCmd(user string, cmd string, argv []string) {
 	log.Print("For user '" + user + "' executing command : " + cmd)
 
