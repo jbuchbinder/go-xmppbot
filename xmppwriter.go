@@ -11,11 +11,12 @@ type XmppWriter struct {
 	User   string
 }
 
-// Instantiate Writer from XmppBot object for a specified XMPP user.
+// GetWriter instantiates Writer from XmppBot object for a specified XMPP user.
 func (self *XmppBot) GetWriter(user string) *XmppWriter {
 	return &XmppWriter{Client: self.client, User: user}
 }
 
+// Write implements the Writer interface.
 func (self *XmppWriter) Write(p []byte) (n int, err error) {
 	self.Client.Send(xmpp.Chat{Remote: self.User, Type: "chat", Text: string(p)})
 	return len(p), nil

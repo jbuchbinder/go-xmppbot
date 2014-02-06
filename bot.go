@@ -31,7 +31,7 @@ type XmppBot struct {
 	commands map[string]*XmppBotCommand
 }
 
-// CreateXmppBot() is the factory method to create a new XMPP chat bot and
+// CreateXmppBot is the factory method to create a new XMPP chat bot and
 // connect to the upstream XMPP server.
 func CreateXmppBot(parameters *XmppBotParams) (*XmppBot, error) {
 	obj := &XmppBot{params: parameters, commands: make(map[string]*XmppBotCommand)}
@@ -49,16 +49,16 @@ func CreateXmppBot(parameters *XmppBotParams) (*XmppBot, error) {
 	return obj, nil
 }
 
-// AddCommand() adds additional capabilties to the bot. If this is never
+// AddCommand adds additional capabilties to the bot. If this is never
 // called, only "version" and "help" commands will be available to end
 // users.
 func (self *XmppBot) AddCommand(c *XmppBotCommand) {
 	self.commands[c.Name] = c
 }
 
-// Run() launches the processing loop for the bot. If this is not called,
+// Run launches the processing loop for the bot. If this is not called,
 // the bot will connect to the XMPP server, but will not process any input.
-func (self *XmppBot) Run() {
+func (self *XmppBot) Run {
 	w := sync.WaitGroup{}
 	w.Add(1)
 	go func() {
