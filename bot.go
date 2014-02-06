@@ -9,27 +9,27 @@ import (
 )
 
 type XmppBotParams struct {
-	Server string
+	Server   string
 	Username string
 	Password string
-	UseTls bool
-	Debug bool
+	UseTls   bool
+	Debug    bool
 }
 
 type XmppBotCommand struct {
-	Name string
+	Name     string
 	HelpText string
-	Command func(client *xmpp.Client, user string, args []string) error
+	Command  func(xmppbot *XmppBot, user string, args []string) error
 }
 
 type XmppBot struct {
-	client *xmpp.Client
-	params *XmppBotParams
+	client   *xmpp.Client
+	params   *XmppBotParams
 	commands map[string]*XmppBotCommand
 }
 
 func CreateXmppBot(parameters *XmppBotParams) (*XmppBot, error) {
-	obj := &XmppBot{params: parameters,commands: make(map[string]*XmppBotCommand)}
+	obj := &XmppBot{params: parameters, commands: make(map[string]*XmppBotCommand)}
 	var err error
 	log.Print("Initializing XMPP connection")
 	if parameters.UseTls {
@@ -86,7 +86,7 @@ func (self *XmppBot) DealWithCmd(user string, raw string) {
 		for k, _ := range self.commands {
 			helptxt += self.commands[k].Name + " : " + self.commands[k].HelpText + "\n"
 		}
-		helptxt += "help : This help text\n"+
+		helptxt += "help : This help text\n" +
 			"version : Display the ops bot version\n"
 		self.SendClient(user, helptxt)
 		break
@@ -96,7 +96,7 @@ func (self *XmppBot) DealWithCmd(user string, raw string) {
 	default:
 		for k, _ := range self.commands {
 			if strings.HasPrefix(strings.TrimSpace(strings.ToLower(raw)), strings.ToLower(self.commands[k].Name)) {
-				self.commands[k].Command(self.client, user, strings.Split(strings.TrimPrefix(strings.TrimSpace(strings.ToLower(raw)), strings.ToLower(self.commands[k].Name)), " "))
+				self.commands[k].Command(self, user, strings.Split(strings.TrimPrefix(strings.TrimSpace(strings.ToLower(raw)), strings.ToLower(self.commands[k].Name)), " "))
 				break
 			}
 		}
@@ -110,4 +110,3 @@ func (self *XmppBot) SendClient(user string, msg string) {
 	log.Print("[" + user + "] : " + msg)
 	self.client.Send(xmpp.Chat{Remote: user, Type: "chat", Text: msg})
 }
-

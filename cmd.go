@@ -40,4 +40,3 @@ func (self *XmppBot) RunCmd(user string, cmd string, argv []string) {
 		go io.Copy(w, stderr)
 	}()
 }
-
