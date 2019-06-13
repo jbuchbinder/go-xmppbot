@@ -1,6 +1,6 @@
 package xmppbot
 
-const (
+var (
 	// go-xmppbot library version number
-	VERSION = "0.1.0"
+	Version = "0.1.0"
 )

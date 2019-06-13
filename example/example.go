@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	bot "github.com/jbuchbinder/go-xmppbot"
 )
 
@@ -12,7 +13,7 @@ var (
 )
 
 func main() {
-	b, err := bot.CreateXmppBot(&bot.XmppBotParams{
+	b, err := bot.CreateXMPPBot(&bot.XmppBotParams{
 		Server:   "talk.google.com:443",
 		Username: *username,
 		Password: *password,
