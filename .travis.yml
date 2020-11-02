@@ -1,6 +1,6 @@
 language: go
 go:
-  - 1.15
+  - "1.15"
   - tip
 script:
   - go test -v
