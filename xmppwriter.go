@@ -1,7 +1,7 @@
 package xmppbot
 
 import (
-	"github.com/mattn/go-xmpp"
+	"github.com/xmppo/go-xmpp"
 )
 
 // XmppWriter is a Writer type which wraps the ability to push traffic to

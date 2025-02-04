@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mattn/go-xmpp"
+	"github.com/xmppo/go-xmpp"
 )
 
 // XmppBot initialization parameters.
